@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Life Dashboard</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+
+    <!-- ===== HEADER: Greeting & Clock ===== -->
+    <header class="header">
+
+      <!-- Theme toggle -->
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+        <span id="theme-icon">🌙</span>
+      </button>
+
+      <div class="clock-wrapper">
+        <div id="clock" class="clock">00:00:00</div>
+        <div id="date" class="date">Monday, January 1, 2026</div>
+      </div>
+
+      <!-- Greeting — name is editable inline -->
+      <h1 class="greeting">
+        <span id="greeting-text">Good Morning</span>,
+        <span
+          id="greeting-name"
+          class="greeting-name"
+          contenteditable="true"
+          spellcheck="false"
+          aria-label="Your name — click to edit"
+          title="Click to edit your name"
+        >Friend</span>!
+      </h1>
+      <p class="greeting-hint">Click your name to change it</p>
+
+    </header>
+
+    <!-- ===== MAIN GRID ===== -->
+    <main class="dashboard">
+
+      <!-- === TO-DO LIST === -->
+      <section class="card todo-card" aria-label="To-Do List">
+
+        <div class="card-title-row">
+          <h2 class="card-title">
+            <span class="card-icon">✅</span> To-Do List
+          </h2>
+          <!-- Sort control -->
+          <div class="sort-group">
+            <label for="todo-sort" class="sort-label">Sort:</label>
+            <select id="todo-sort" class="sort-select" aria-label="Sort tasks">
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+              <option value="active">Active first</option>
+              <option value="done">Done first</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="todo-input-group">
+          <input
+            type="text"
+            id="todo-input"
+            class="todo-input"
+            placeholder="Add a new task..."
+            maxlength="120"
+            aria-label="New task"
+          />
+          <button id="todo-add-btn" class="btn btn-primary" aria-label="Add task">Add</button>
+        </div>
+
+        <ul id="todo-list" class="todo-list" aria-label="Task list"></ul>
+
+        <div class="todo-footer">
+          <span id="todo-count" class="todo-count">0 tasks remaining</span>
+          <button id="todo-clear-btn" class="btn btn-ghost btn-sm" aria-label="Clear completed tasks">
+            Clear done
+          </button>
+        </div>
+      </section>
+
+      <!-- === FOCUS TIMER === -->
+      <section class="card timer-card" aria-label="Focus Timer">
+        <h2 class="card-title">
+          <span class="card-icon">⏱️</span> Focus Timer
+        </h2>
+
+        <div class="timer-display-wrap">
+          <svg class="timer-ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="timer-ring-bg" cx="60" cy="60" r="52" />
+            <circle id="timer-ring-progress" class="timer-ring-progress" cx="60" cy="60" r="52" />
+          </svg>
+          <div id="timer-display" class="timer-display">25:00</div>
+        </div>
+
+        <p id="timer-label" class="timer-label">Ready to focus</p>
+
+        <div class="timer-controls">
+          <button id="timer-start-btn" class="btn btn-primary" aria-label="Start timer">Start</button>
+          <button id="timer-stop-btn"  class="btn btn-secondary" aria-label="Stop timer" disabled>Stop</button>
+          <button id="timer-reset-btn" class="btn btn-ghost" aria-label="Reset timer">Reset</button>
+        </div>
+
+        <div class="timer-presets" aria-label="Timer presets">
+          <button class="btn btn-ghost btn-sm preset-btn" data-minutes="25" aria-label="25 minute timer">25 min</button>
+          <button class="btn btn-ghost btn-sm preset-btn" data-minutes="10" aria-label="10 minute timer">10 min</button>
+          <button class="btn btn-ghost btn-sm preset-btn" data-minutes="5"  aria-label="5 minute timer">5 min</button>
+        </div>
+
+        <div class="session-counter">
+          <span>Sessions completed today:</span>
+          <strong id="session-count">0</strong>
+        </div>
+      </section>
+
+      <!-- === QUICK LINKS === -->
+      <section class="card links-card" aria-label="Quick Links">
+        <h2 class="card-title">
+          <span class="card-icon">🔗</span> Quick Links
+        </h2>
+
+        <div class="link-input-group">
+          <input
+            type="text"
+            id="link-name-input"
+            class="link-input"
+            placeholder="Name (e.g. GitHub)"
+            maxlength="30"
+            aria-label="Link name"
+          />
+          <input
+            type="url"
+            id="link-url-input"
+            class="link-input"
+            placeholder="https://example.com"
+            aria-label="Link URL"
+          />
+          <button id="link-add-btn" class="btn btn-primary" aria-label="Add link">Add</button>
+        </div>
+
+        <div id="links-grid" class="links-grid" aria-label="Saved links"></div>
+
+        <p id="links-empty" class="empty-hint">No links yet. Add your favorite sites above.</p>
+      </section>
+
+    </main>
+
+    <!-- ===== EDIT MODAL ===== -->
+    <div id="edit-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+      <div class="modal">
+        <h3 id="modal-title" class="modal-title">Edit Task</h3>
+        <input type="text" id="edit-input" class="todo-input" maxlength="120" aria-label="Edit task text" />
+        <div class="modal-actions">
+          <button id="edit-save-btn" class="btn btn-primary">Save</button>
+          <button id="edit-cancel-btn" class="btn btn-ghost">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TOAST NOTIFICATION ===== -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
